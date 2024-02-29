@@ -13,100 +13,100 @@ const { Header, Sider, Content } = Layout;
 const App = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [selectedMenuItem, setSelectedMenuItem] = useState(null);
+    const [cardData, setCardData] = useState({
+        cardNumber: '',
+        expirationDate: '',
+        cvv: '',
+        cardHolder: '',
+    });
+    const [submittedData, setSubmittedData] = useState(null);
 
     const handleCardNumberChange = (value) => {
-        /// Eliminați orice caracter non-numeric din valoare
         const numericValue = value.replace(/\D/g, '');
-
-        // Actualizați starea doar dacă valoarea a fost modificată
-        if (numericValue !== value) {
-            value = numericValue;
-        }
-        console.log('Card number changed:', numericValue);
+        setCardData((prevData) => ({ ...prevData, cardNumber: numericValue }));
     };
 
     const handleExpirationDateChange = (value) => {
-        // Adaugă logica pentru data de expirare
-        console.log('Expiration date changed:', value);
+        setCardData((prevData) => ({ ...prevData, expirationDate: value }));
     };
 
     const handleCVVChange = (value) => {
-        // Adaugă logica pentru CVV
-        console.log('CVV changed:', value);
+        setCardData((prevData) => ({ ...prevData, cvv: value }));
     };
 
     const handleCardHolderChange = (value) => {
-        // Elimină orice caracter care nu este literă
         const alphabeticValue = value.replace(/[^a-zA-Z\s]/g, '');
-
-        // Adaugă orice altă logică necesară
-        console.log('Card holder changed:', alphabeticValue);
+        setCardData((prevData) => ({ ...prevData, cardHolder: alphabeticValue }));
     };
 
-    const handleButtonClick = () => {
-        // Adaugă logica pentru butonul de submit
-        alert('Button clicked!');
+    const handleSaveClick = () => {
+        // Extract data from cardData state
+        const { cardNumber, expirationDate, cvv, cardHolder } = cardData;
+
+        // Simulate saving the data (you can replace this with your actual save logic)
+        localStorage.setItem('savedCardData', JSON.stringify({ cardNumber, expirationDate, cvv, cardHolder }));
+
+        // Set submitted data to be displayed
+        setSubmittedData({ cardNumber, expirationDate, cvv, cardHolder });
     };
 
     const handleMenuClick = ({ key }) => {
         setSelectedMenuItem(key);
     };
 
-    const cardData = [
+    const dynamicCardData = [
         {
             title: 'Cardul 1',
             content: (
                 <div>
-                    <div>
-                        <p>Nr.card:</p>
-
+                    <label>Card Number:</label>
                     <input
-                        //type="tel"
-                        placeholder="XXXXXXXXXXXX"
-                        pattern="\d{16}"
-                        maxLength="16"
-                        type="number"
-                        className="medium-input"
+                        type="text"
+                        value={cardData.cardNumber}
                         onChange={(e) => handleCardNumberChange(e.target.value)}
+                        maxLength={16}
+                        pattern="\d{16}"
+                        title="Please enter a 16-digit card number"
+                        required
                     />
-                    </div>
+                    <br />
 
-                    <div>
-                        <p>Data expirare:</p>
-                        <input
-                            type="text"
-                            placeholder="MM/YY"
-                            pattern="\d{4}"
-                            maxLength="4"
-                            type="number"
-                            className="small-input"
-                            onChange={(e) => handleExpirationDateChange(e.target.value)}
-                        />
-                    </div>
-                    <div>
-                        <p>CVV:</p>
-                        <input
-                            type="text"
-                            placeholder="XXX"
-                            pattern="\d{3}"
-                            maxLength="3"
-                            type="number"
-                            className="small-input"
-                            onChange={(e) => handleCVVChange(e.target.value)}
-                        />
-                    </div>
-                    <div>
-                        <p>Card holder:</p>
-                        <input
-                            type="text"
-                            placeholder="Numele Prenumele"
-                            className="medium-input"
-                            onChange={(e) => handleCardHolderChange(e.target.value)}
-                        />
-                    </div>
-                    <button className="button" onClick={handleButtonClick}>
+                    <label>Expiration Date:</label>
+                    <input
+                        type="text"
+                        value={cardData.expirationDate}
+                        onChange={(e) => handleExpirationDateChange(e.target.value)}
+                        placeholder="MM/YYYY"
+                        required
+                    />
+                    <br />
+
+                    <label>CVV:</label>
+                    <input
+                        type="text"
+                        value={cardData.cvv}
+                        onChange={(e) => handleCVVChange(e.target.value)}
+                        maxLength={3}
+                        pattern="\d{3}"
+                        title="Please enter a 3-digit CVV"
+                        required
+                    />
+                    <br />
+
+                    <label>Card Holder:</label>
+                    <input
+                        type="text"
+                        value={cardData.cardHolder}
+                        onChange={(e) => handleCardHolderChange(e.target.value)}
+                        required
+                    />
+                    <br />
+
+                    <button className="button" onClick={handleSaveClick}>
                         Submit
                     </button>
+
+
                 </div>
             ),
         },
@@ -153,12 +153,25 @@ const App = () => {
                     {/* Main Content Area with Dynamic Cards */}
                     {selectedMenuItem === '2' && (
                         <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-                            {cardData.map((card, index) => (
+                            {dynamicCardData.map((card, index) => (
                                 <Card key={index} title={card.title} style={{ margin: '16px 0' }}>
                                     {card.content}
                                 </Card>
                             ))}
+                        </div>
+                    )}
 
+                    {selectedMenuItem === '3' && (
+                        <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
+                            {submittedData && (
+                                <div>
+                                    <h2>Submitted Data:</h2>
+                                    <p>Card Number: {submittedData.cardNumber}</p>
+                                    <p>Expiration Date: {submittedData.expirationDate}</p>
+                                    <p>CVV: {submittedData.cvv}</p>
+                                    <p>Card Holder: {submittedData.cardHolder}</p>
+                                </div>
+                            )}
                         </div>
                     )}
                 </Content>
