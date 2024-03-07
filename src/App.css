@@ -3,7 +3,28 @@
 }
 
 
+.button1 {
+  border: none;
+  display: block;
+  font-size: 17px;
+  cursor: pointer;
+  color: royalblue;
+  font-weight: 700;
+  border-radius: 15px;
+  transition-duration: 0.4s;
+}
 
+.button1:hover {
+  background-color: #04AA6D; /* Gre */
+  color: white;
+}
 
+.input1{
+  position: relative;
+  margin-top: 10px;
+  margin-block: 15px;
+  border-radius: 10px;
+  padding: 10px;
 
+}
 

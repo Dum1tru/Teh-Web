@@ -1,14 +1,38 @@
 import React, { useState } from 'react';
 import { Layout, Menu, Button, Card } from 'antd';
+import { FirstInterface, SecondInterface } from './App';
+import styles from './App.css';
+import { Store, Action, AnyAction } from 'redux';
+
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
     HomeOutlined,
     CreditCardOutlined,
     ContactsOutlined,
+    UserOutlined,
 } from '@ant-design/icons';
 
 const { Header, Sider, Content } = Layout;
+
+const exampleObject1: FirstInterface = {
+    field1: 'value1',
+    field2: 42,
+    field3: true,
+    field4: ['item1', 'item2'],
+    field5: { key: 'example', value: 10 },
+};
+
+const exampleObject2: SecondInterface = {
+    field1: 'value1',
+    field2: 42,
+    field3: true,
+    field4: ['item1', 'item2'],
+    field5: { key: 'example', value: 10 },
+    additionalField1: 'extraValue1',
+    additionalField2: false,
+}
+
 
 const App = () => {
     const [collapsed, setCollapsed] = useState(false);
@@ -24,14 +48,21 @@ const App = () => {
     const handleCardNumberChange = (value) => {
         const numericValue = value.replace(/\D/g, '');
         setCardData((prevData) => ({ ...prevData, cardNumber: numericValue }));
+
     };
 
     const handleExpirationDateChange = (value) => {
         setCardData((prevData) => ({ ...prevData, expirationDate: value }));
+
     };
 
     const handleCVVChange = (value) => {
-        setCardData((prevData) => ({ ...prevData, cvv: value }));
+        // Elimină orice caracter care nu este cifră
+        const sanitizedValue = value.replace(/\D/g, '');
+        // Verifică dacă lungimea este maxim 3 cifre
+        if (sanitizedValue.length <= 3) {
+            setCardData((prevData) => ({ ...prevData, cvv: sanitizedValue }));
+        }
     };
 
     const handleCardHolderChange = (value) => {
@@ -54,58 +85,82 @@ const App = () => {
         setSelectedMenuItem(key);
     };
 
+    const handleRegisterLoginClick = () => {
+
+        console.log('Navigare către pagina de înregistrare sau autentificare...');
+    };
+
     const dynamicCardData = [
         {
             title: 'Cardul 1',
             content: (
                 <div>
-                    <label>Card Number:</label>
-                    <input
-                        type="text"
-                        value={cardData.cardNumber}
-                        onChange={(e) => handleCardNumberChange(e.target.value)}
-                        maxLength={16}
-                        pattern="\d{16}"
-                        title="Please enter a 16-digit card number"
-                        required
-                    />
+
+                    <center>
+
+                        <input
+                            className="input1"
+                            type="text"
+                            placeholder="xxxx xxxx xxxx xxxx"
+                            value={cardData.cardNumber}
+                            onChange={(e) => handleCardNumberChange(e.target.value)}
+                            maxLength={16}
+                            pattern="\d{16}"
+                            title="Please enter a 16-digit card number"
+                            required
+                        />
+                    </center>
                     <br />
 
-                    <label>Expiration Date:</label>
-                    <input
-                        type="text"
-                        value={cardData.expirationDate}
-                        onChange={(e) => handleExpirationDateChange(e.target.value)}
-                        placeholder="MM/YYYY"
-                        required
-                    />
+
+                    <center>
+
+                        <input
+                            className="input1"
+                            type="text"
+                            value={cardData.expirationDate}
+                            onChange={(e) => handleExpirationDateChange(e.target.value)}
+                            placeholder="MM/YY"
+                            required
+                        />
+                    </center>
+                    <br/>
+
+
+                    <center>
+
+                        <input
+                            className="input1"
+                            type="text"
+                            placeholder="CVV"
+                            value={cardData.cvv}
+                            onChange={(e) => handleCVVChange(e.target.value)}
+                            maxLength={3}
+                            pattern="\d{3}"
+                            title="Please enter a 3-digit CVV"
+                            required
+                        />
+                    </center>
                     <br />
 
-                    <label>CVV:</label>
-                    <input
-                        type="text"
-                        value={cardData.cvv}
-                        onChange={(e) => handleCVVChange(e.target.value)}
-                        maxLength={3}
-                        pattern="\d{3}"
-                        title="Please enter a 3-digit CVV"
-                        required
-                    />
+
+                    <center>
+
+                        <input
+                            className="input1"
+                            type="text"
+                            placeholder="Nume Prenume"
+                            value={cardData.cardHolder}
+                            onChange={(e) => handleCardHolderChange(e.target.value)}
+                            required
+                        />
+                    </center>
                     <br />
-
-                    <label>Card Holder:</label>
-                    <input
-                        type="text"
-                        value={cardData.cardHolder}
-                        onChange={(e) => handleCardHolderChange(e.target.value)}
-                        required
-                    />
-                    <br />
-
-                    <button className="button" onClick={handleSaveClick}>
-                        Submit
-                    </button>
-
+                    <center>
+                        <button className="button1" onClick={handleSaveClick} >
+                            Submit
+                        </button>
+                    </center>
 
                 </div>
             ),
@@ -147,6 +202,19 @@ const App = () => {
                             height: 64,
                         }}
                     />
+
+                    {/* Al doilea buton pentru înregistrare sau autentificare */}
+                    <Button
+                        type="text"
+                        icon={<UserOutlined />}
+                        onClick={handleRegisterLoginClick}
+                        style={{
+                            fontSize: '16px',
+                            margin: '0 16px',
+                        }}
+                    >
+                        Register/Login
+                    </Button>
                 </Header>
 
                 <Content style={{ margin: '16px' }}>
